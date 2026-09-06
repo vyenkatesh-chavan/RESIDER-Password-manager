@@ -21,7 +21,7 @@ connectDB();
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   })
 );
@@ -41,9 +41,7 @@ app.use(
 
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
-
       collectionName: "sessions",
-
       ttl: 7 * 24 * 60 * 60,
     }),
 
@@ -93,6 +91,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+// Start server
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`RESIDER backend running on port ${PORT}`);
 });
