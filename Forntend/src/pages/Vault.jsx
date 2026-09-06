@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const SECOND_MS = 1000;
 
 // ------------------------------------------
@@ -89,8 +92,10 @@ function Vault() {
   // ------------------------------------------
 
   const [deleteItem, setDeleteItem] = useState(null);
+
   const [showFirstConfirmation, setShowFirstConfirmation] =
     useState(false);
+
   const [showSecondConfirmation, setShowSecondConfirmation] =
     useState(false);
 
@@ -117,7 +122,7 @@ function Vault() {
         setError("");
 
         const response = await fetch(
-          "http://localhost:5000/api/vault",
+          `${API_URL}/api/vault`,
           {
             method: "GET",
             credentials: "include",
@@ -187,13 +192,16 @@ function Vault() {
       setAdding(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/vault",
+        `${API_URL}/api/vault`,
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           credentials: "include",
+
           body: JSON.stringify({
             appName: appName.trim(),
             password,
@@ -293,7 +301,7 @@ function Vault() {
       // ------------------------------------------
 
       const response = await fetch(
-        `http://localhost:5000/api/vault/${item.id}/password`,
+        `${API_URL}/api/vault/${item.id}/password`,
         {
           method: "GET",
           credentials: "include",
@@ -360,7 +368,7 @@ function Vault() {
   const refreshVault = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/vault",
+        `${API_URL}/api/vault`,
         {
           method: "GET",
           credentials: "include",
@@ -442,27 +450,53 @@ function Vault() {
   // SECOND CONFIRMATION
   // ------------------------------------------
 
-  const handleFinalDelete = () => {
+  const handleFinalDelete = async () => {
     if (!deleteItem) {
       return;
     }
 
-    // ------------------------------------------
-    // FRONTEND ONLY FOR NOW
-    // ------------------------------------------
-    // Backend DELETE API will be connected later.
+    try {
+      setError("");
 
-    setVaultItems((items) =>
-      items.filter(
-        (item) =>
-          item.id !== deleteItem.id
-      )
-    );
+      const response = await fetch(
+        `${API_URL}/api/vault/${deleteItem.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-    setShowSecondConfirmation(false);
-    setShowFirstConfirmation(false);
-    setDeleteItem(null);
-    setError("");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(
+          data.message ||
+            "Failed to delete the vault item."
+        );
+
+        return;
+      }
+
+      setVaultItems((items) =>
+        items.filter(
+          (item) =>
+            item.id !== deleteItem.id
+        )
+      );
+
+      setShowSecondConfirmation(false);
+      setShowFirstConfirmation(false);
+      setDeleteItem(null);
+    } catch (error) {
+      console.error(
+        "Delete password error:",
+        error
+      );
+
+      setError(
+        "Unable to connect to the server. Please try again."
+      );
+    }
   };
 
   // ------------------------------------------
@@ -925,6 +959,7 @@ function Vault() {
       {/* ================================================== */}
 
       {showFirstConfirmation && deleteItem && (
+
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4">
 
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
@@ -941,8 +976,7 @@ function Vault() {
               You are about to delete the block for{" "}
               <span className="font-semibold text-slate-700">
                 {deleteItem.appName}
-              </span>
-              .
+              </span>.
             </p>
 
             <p className="mt-2 text-sm leading-6 text-slate-500">
@@ -974,6 +1008,7 @@ function Vault() {
           </div>
 
         </div>
+
       )}
 
       {/* ================================================== */}
@@ -981,6 +1016,7 @@ function Vault() {
       {/* ================================================== */}
 
       {showSecondConfirmation && deleteItem && (
+
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 px-4">
 
           <div className="w-full max-w-md rounded-2xl border border-rose-200 bg-white p-6 shadow-2xl">
@@ -1028,6 +1064,7 @@ function Vault() {
           </div>
 
         </div>
+
       )}
 
     </div>

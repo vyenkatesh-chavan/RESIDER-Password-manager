@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,7 +18,7 @@ function Navbar() {
   const checkSession = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/me",
+        `${API_URL}/api/auth/me`,
         {
           method: "GET",
           credentials: "include",
@@ -48,7 +51,7 @@ function Navbar() {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/logout",
+        `${API_URL}/api/auth/logout`,
         {
           method: "POST",
           credentials: "include",
