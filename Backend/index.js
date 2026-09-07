@@ -13,12 +13,16 @@ dotenv.config();
 
 const app = express();
 
+// Trust Render's reverse proxy.
+// Required for secure production cookies.
+app.set("trust proxy", 1);
+
 const PORT = process.env.PORT || 5000;
 
 // Connect MongoDB
 connectDB();
 
-// Middleware
+// CORS
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
@@ -26,9 +30,10 @@ app.use(
   })
 );
 
+// Parse JSON
 app.use(express.json());
 
-// Session
+// Session configuration
 app.use(
   session({
     name: "resider.sid",
@@ -68,12 +73,13 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Routes
+// Authentication routes
 app.use("/api/auth", authRoutes);
 
+// Vault routes
 app.use("/api/vault", vaultRoutes);
 
-// 404
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
