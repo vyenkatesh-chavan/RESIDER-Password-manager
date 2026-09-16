@@ -449,9 +449,114 @@ const getVaultPassword = async (
     });
   }
 };
+// ------------------------------------------
+// DELETE VAULT ITEM
+// ------------------------------------------
+
+const deleteVaultItem = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required.",
+      });
+    }
+
+    const { id } = req.params;
+
+    // ------------------------------------------
+    // Validate ID
+    // ------------------------------------------
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid vault item ID.",
+      });
+    }
+
+    // ------------------------------------------
+    // Find item belonging to current user
+    // ------------------------------------------
+
+    const item = await VaultItem.findOne({
+      _id: id,
+      userId,
+    });
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Vault item not found.",
+      });
+    }
+
+    const now = Date.now();
+
+    const blockEndsAt =
+      item.blockEndsAt.getTime();
+
+    // ------------------------------------------
+    // Check whether password is currently
+    // accessible
+    // ------------------------------------------
+
+    const blockFinished =
+      now >= blockEndsAt;
+
+    const accessAvailable =
+      blockFinished &&
+      (
+        !item.accessEndsAt ||
+        now < item.accessEndsAt.getTime()
+      );
+
+    // ------------------------------------------
+    // DO NOT ALLOW DELETE WHILE LOCKED
+    // ------------------------------------------
+
+    if (!accessAvailable) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Vault item cannot be deleted while it is locked.",
+        status: "blocked",
+        blockEndsAt: item.blockEndsAt,
+        accessEndsAt: null,
+      });
+    }
+
+    // ------------------------------------------
+    // Delete item
+    // ------------------------------------------
+
+    await VaultItem.deleteOne({
+      _id: id,
+      userId,
+    });
+
+    return res.json({
+      success: true,
+      message: "Vault item deleted successfully.",
+    });
+  } catch (error) {
+    console.error(
+      "Delete vault item error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete vault item.",
+    });
+  }
+};
 
 module.exports = {
   getVaultItems,
   addVaultItem,
   getVaultPassword,
+  deleteVaultItem,
 };
