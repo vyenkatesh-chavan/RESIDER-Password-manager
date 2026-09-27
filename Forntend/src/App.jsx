@@ -1,9 +1,10 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./pages/Navbar";
 import Login from "./login/Login";
 import Register from "./login/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+
 import GeneratePassword from "./pages/GeneratePassword";
 import Vault from "./pages/Vault";
 import HowItWorks from "./pages/Work";
@@ -17,18 +18,34 @@ function App() {
 
       <Routes>
         <Route path="/" element={<h1>RESIDER Home</h1>} />
+
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
-        <Route path="/generate" element={<GeneratePassword />} />
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/generate"
+          element={<GeneratePassword />}
+        />
+
         <Route path="/vault" element={<Vault />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
+
+        <Route
+          path="/how-it-works"
+          element={<HowItWorks />}
+        />
+
         <Route path="/security" element={<Security />} />
+
         <Route path="/about" element={<About />} />
-        
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
-

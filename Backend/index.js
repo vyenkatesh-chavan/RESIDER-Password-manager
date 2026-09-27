@@ -1,15 +1,16 @@
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo").default;
-const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const vaultRoutes = require("./routes/vaultRoutes");
-
-dotenv.config();
 
 const app = express();
 
