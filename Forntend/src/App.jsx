@@ -5,7 +5,7 @@ import Home from "./page/Home.jsx";
 import Login from "./login/Login";
 import Register from "./login/Register";
 import ForgotPassword from "./pages/ForgotPassword";
-
+import Home from "./pages/Home";
 import GeneratePassword from "./pages/GeneratePassword";
 import Vault from "./pages/Vault";
 import HowItWorks from "./pages/Work";
@@ -18,7 +18,7 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home/>} />
+        <Route path="/" element={<h1>RESIDER Home</h1>} />
 
         <Route path="/login" element={<Login />} />
 
