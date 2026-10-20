@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Login from "./login/Login";
 import Register from "./login/Register";
 import ForgotPassword from "./pages/ForgotPassword";
-import Home from "./pages/Home";
+//import Home from "./pages/Home";
 import GeneratePassword from "./pages/GeneratePassword";
 import Vault from "./pages/Vault";
 import HowItWorks from "./pages/Work";
