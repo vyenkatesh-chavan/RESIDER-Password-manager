@@ -12,13 +12,15 @@ import HowItWorks from "./pages/Work";
 import Security from "./pages/Security";
 import About from "./pages/About";
 
+//right code 
+
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home /> } />
+        <Route path="/" element={<Home /> } />   
 
         <Route path="/login" element={<Login />} />
 
