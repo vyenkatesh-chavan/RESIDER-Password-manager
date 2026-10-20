@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./pages/Navbar";
+import Home from "./page/Home.jsx";
 import Login from "./login/Login";
 import Register from "./login/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -17,7 +18,7 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<h1>RESIDER Home</h1>} />
+        <Route path="/" element={<Home/>} />
 
         <Route path="/login" element={<Login />} />
 
